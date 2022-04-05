@@ -3,10 +3,10 @@ from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
 from mycroft.skills.audioservice import AudioService
 import requests
 
+from .defaultstreams import getDefaultStreams
 class RadioBob(CommonPlaySkill):
     def __init__(self):
         CommonPlaySkill.__init__(self)
-
 
     def checkUrl(self,url):
         checkedUrl = None
@@ -25,10 +25,16 @@ class RadioBob(CommonPlaySkill):
         return checkedUrl
 
     def initialize(self):
+        STREAMS_FN = "streams.txt"
         self.audio_service = AudioService(self.bus)
 
+        if not self.file_system.exists(STREAMS_FN):
+            with self.file_system.open(STREAMS_FN, "w") as streams_file:
+                streams_file.write(getDefaultStreams())
+                streams_file.close()
+
         self.streams = {}
-        with self.file_system.open("streams.txt", "r") as streams_file:
+        with self.file_system.open(STREAMS_FN, "r") as streams_file:
             for entry in streams_file.readlines():
                 values = entry.split(':',1)
 

@@ -1,3 +1,5 @@
+def getDefaultStreams():
+        return """\
 default: http://streams.radiobob.de/bob-live/mp3-192/mediaplayer
 Hessen: http://streams.radiobob.de/bob-live/mp3-192/mediaplayer
 NRW: http://streams.radiobob.de/live-nrw-mitte/mp3-192/mediaplayer
@@ -37,4 +39,4 @@ Symphonic Metal: http://streams.radiobob.de/symphmetal/mp3-192/mediaplayer
 Country: http://streams.radiobob.de/country/mp3-192/mediaplayer
 Blues: http://streams.radiobob.de/blues/mp3-192/mediaplayer
 College Rock: http://streams.radiobob.de/blues/mp3-192/mediaplayer
-Emo Rock: http://streams.radiobob.de/emo/mp3-192/mediaplayer
+Emo Rock: http://streams.radiobob.de/emo/mp3-192/mediaplayer"""
