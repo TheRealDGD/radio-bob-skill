@@ -9,14 +9,20 @@ class RadioBob(CommonPlaySkill):
 
 
     def checkUrl(self,url):
-        url = None
+        checkedUrl = None
+
+        self.log.debug("requested url = {}".format(url))
 
         r = requests.get(url,stream=True,timeout=5)
+
+        self.log.debug("request status = {}".format(r.status_code))
+        self.log.debug("returned url = {}".format(r.url))
+
         if (r.status_code == 200):
-            url = r.url
+            checkedUrl = r.url
 
         r.close()
-        return url
+        return checkedUrl
 
     def initialize(self):
         self.audio_service = AudioService(self.bus)
@@ -31,11 +37,16 @@ class RadioBob(CommonPlaySkill):
                     url = values[1].strip()
 
                     self.streams[name] = url
-                    self.log.debug("Adding {} stream. URL = {}".format(name, url))
+                    self.log.debug("adding {} stream. URL = {}".format(name, url))
                 else:
-                    self.log.warning("Invalid Entry {}".format(entry))
+                    self.log.warning("invalid entry {}".format(entry))
                 
             streams_file.close()
+
+        if len(self.streams) > 0:
+            self.log.info("{} streams loaded".format(len(self.streams)))
+        else:
+            self.log.error("no streams loded, check streams.txt")
 
 
     def CPS_match_query_phrase(self, phrase):
@@ -51,8 +62,11 @@ class RadioBob(CommonPlaySkill):
 
         if phrase in self.streams:
             return (phrase,CPSMatchLevel.EXACT,self.streams[phrase])
-        else:
-            return None
+
+        if self.voc_match(phrase,"bob.radio"):
+            return (phrase,CPSMatchLevel.EXACT,self.streams["default"])
+
+        return None
 
     def CPS_start(self, phrase, data):
         """ Starts playback.
@@ -65,8 +79,12 @@ class RadioBob(CommonPlaySkill):
         #self.audio_service.stop()
 
         url = self.checkUrl(data)
-        self.log.info("resolved URL: {}".format(url))
-        self.audio_service.play(url)
+        if url != None:
+            self.log.info("resolved URL: {}".format(url))
+            self.audio_service.play(url)
+        else:
+            self.speak_dialog('bob.error')
+
 
 
 def create_skill():
