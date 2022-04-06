@@ -24,3 +24,6 @@ Stefan Kaemper
 #Rock
 #Music
 
+## Configuration
+List of availablte streams is created in streams.txt in the local config folder. (~.config/mycroft/skills/RadioBob) an can be modified.
+
