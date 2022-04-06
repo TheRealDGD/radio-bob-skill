@@ -19,7 +19,7 @@ class RadioBob(CommonPlaySkill):
         self.log.debug("returned url = {}".format(r.url))
 
         if (r.status_code == 200):
-            checkedUrl = r.url
+            checkedUrl = r.url.split('?',1)[0]  # Return only URL without parameters
 
         r.close()
         return checkedUrl
